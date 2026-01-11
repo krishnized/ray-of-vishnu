@@ -101,6 +101,41 @@
         .time { display: none; }
         .loading { color: #888; font-style: italic; }
 
+        /* Tooltips for difficult words */
+        .dfn {
+            border-bottom: 1px dotted #888;
+            cursor: help;
+            position: relative;
+        }
+        .dfn:hover::after {
+            content: attr(data-def);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 0.7em;
+            width: max-content;
+            max-width: 280px;
+            z-index: 100;
+            line-height: 1.5;
+            margin-bottom: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .dfn:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+            margin-bottom: -6px;
+        }
+
         @media (max-width: 1000px) {
             .page { grid-template-columns: 1fr; }
             .author { position: static; width: 100%; height: 200px; padding-bottom: 20px; }
@@ -131,16 +166,92 @@
     </div>
 
     <script>
+        // Glossary of difficult words
+        const glossary = {
+            'meagre': 'small, inadequate',
+            'unedifying': 'uninstructive, not uplifting',
+            'profane': 'irreverent, disrespectful',
+            'aberration': 'deviation from normal',
+            'censorious': 'severely critical',
+            'calumniate': 'slander, defame',
+            'serene': 'calm, peaceful',
+            'jargon': 'specialized language',
+            'procure': 'obtain, acquire',
+            'defray': 'pay for, cover costs',
+            'antecedents': 'ancestors, predecessors',
+            'indecencies': 'improper acts',
+            'unadulterated': 'pure, unmixed',
+            'transcends': 'goes beyond, surpasses',
+            'apathy': 'indifference, lack of interest',
+            'dissoluteness': 'immoral indulgence',
+            'palpable': 'obvious, tangible',
+            'continent': 'self-restrained, chaste',
+            'temporal': 'worldly, not eternal',
+            'sublimated': 'refined, purified',
+            'immaculate': 'spotless, pure',
+            'appropriateness': 'suitability, fittingness',
+            'despicable': 'contemptible, vile',
+            'meagreness': 'scantiness, poorness',
+            'despotism': 'absolute power',
+            'propensities': 'tendencies, inclinations',
+            'ardently': 'passionately, eagerly',
+            'transmigration': 'rebirth, passing of soul',
+            'metempsychosis': 'transmigration of souls',
+            'assailable': 'attackable, vulnerable',
+            'inductive': 'based on observation',
+            'wrangling': 'arguing, disputing',
+            'stigma': 'mark of disgrace',
+            'ambit': 'scope, range',
+            'inscrutable': 'mysterious, unfathomable',
+            'dint': 'force, means',
+            'conversant': 'familiar with',
+            'devoid': 'lacking, without',
+            'sentient': 'conscious, aware',
+            'collyrium': 'eye ointment',
+            'intrinsically': 'inherently, essentially',
+            'receptacle': 'container, vessel',
+            'cognisance': 'awareness, knowledge',
+            'deliberations': 'considerations, discussions',
+            'partisans': 'strong supporters',
+            'exponents': 'advocates, promoters',
+            'henotheists': 'worshippers of one god among many',
+            'contemplation': 'deep thought, meditation',
+            'blasphemous': 'irreverent, sacrilegious',
+            'corroboration': 'confirmation, support',
+            'elucidation': 'clarification, explanation',
+            'ontology': 'study of being/existence',
+            'allegorical': 'symbolic, metaphorical',
+            'anthropomorphism': 'attributing human form to God',
+            'therianthropism': 'human-animal deity form',
+            'apotheosis': 'deification, elevation to divine',
+            'speculationists': 'theorizers',
+            'vitiated': 'corrupted, impaired',
+            'vouchsafed': 'granted, gave',
+            'inviolable': 'unbreakable, sacred',
+            'empiricists': 'those who rely on experience',
+            'testaceous': 'having a shell',
+            'mannikin': 'dwarf, small person',
+            'preceptorial': 'relating to a teacher'
+        };
+
         // Load and render text
         fetch('chapter13.txt')
             .then(r => r.text())
             .then(text => {
                 const container = document.getElementById('text');
-                container.innerHTML = formatText(text);
+                container.innerHTML = addTooltips(formatText(text));
             })
             .catch(() => {
                 document.getElementById('text').innerHTML = '<p>Could not load text.</p>';
             });
+
+        function addTooltips(html) {
+            for (const [word, def] of Object.entries(glossary)) {
+                const regex = new RegExp(`\\b(${word})\\b`, 'gi');
+                html = html.replace(regex, `<span class="dfn" data-def="${def}">$1</span>`);
+            }
+            return html;
+        }
 
         function formatText(raw) {
             const lines = raw.split('\n');
