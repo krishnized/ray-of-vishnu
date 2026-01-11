@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ray of Vishnu - Chapter 13: Scholars and Indologists</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-text: #2c2c2c;
+            --accent-gold: #8b7d6b;
+            --cream: #f5f5f5;
+            --border-color: #d0d0d0;
+            --shadow: rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(22px, 2.5vw, 32px);
+            line-height: 1.75;
+            color: var(--primary-text);
+            background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 100vh;
+            width: 100%;
+            background: #f2f2f2;
+            box-shadow: none;
+        }
+
+        .sidebar {
+            background: linear-gradient(
+                rgba(107, 107, 107, 0.7), 
+                rgba(74, 74, 74, 0.8)
+            ), url('Srila-Bhaktisidhanta-Saraswati-Thakur.jpg') center/cover;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .book-title {
+            color: #ffffff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(20px, 2.8vw, 28px);
+            font-weight: 600;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            line-height: 1.3;
+            margin-top: 20px;
+        }
+
+        .author-name {
+            color: #ffffff;
+            font-size: clamp(16px, 2.2vw, 22px);
+            text-align: center;
+            font-style: italic;
+            line-height: 1.4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: clamp(40px, 6vw, 80px) clamp(40px, 8vw, 120px) 100px clamp(30px, 6vw, 80px);
+            max-width: none;
+        }
+
+        .chapter-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(42px, 6vw, 64px);
+            font-weight: 600;
+            color: #6b6b6b;
+            margin-bottom: 15px;
+            text-align: left;
+            letter-spacing: 1px;
+        }
+
+        .chapter-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 400;
+            color: #7a7a7a;
+            margin-bottom: 50px;
+            font-style: italic;
+        }
+
+        .opening-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 6px 20px var(--shadow);
+            margin: 0 auto 40px auto;
+            display: block;
+            border: 2px solid var(--border-color);
+        }
+
+        .paragraph {
+            margin-bottom: 35px;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .quote {
+            font-style: italic;
+            padding: 25px 35px;
+            margin: 40px 0;
+            border-left: 4px solid #8b7d6b;
+            background: rgba(139, 125, 107, 0.08);
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+
+        .quote::before {
+            content: '"';
+            font-size: 60px;
+            color: #8b7d6b;
+            position: absolute;
+            left: 10px;
+            top: -5px;
+            font-family: 'Cormorant Garamond', serif;
+            opacity: 0.7;
+        }
+
+        .dialogue {
+            margin: 30px 0;
+        }
+
+        .speaker {
+            font-weight: 600;
+            color: #6b6b6b;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(20px, 2.8vw, 28px);
+            margin-bottom: 8px;
+        }
+
+        .response {
+            margin-left: 20px;
+            margin-bottom: 25px;
+        }
+
+        .editorial-note {
+            background: rgba(107, 107, 107, 0.08);
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            border-left: 3px solid #7a7a7a;
+            font-size: clamp(18px, 2.2vw, 24px);
+            color: #4a4a4a;
+        }
+
+        .verse-ref {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            color: #8b7d6b;
+            font-style: italic;
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .section-break {
+            text-align: center;
+            margin: 50px 0;
+            color: #8b7d6b;
+            font-size: clamp(20px, 3vw, 32px);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+                height: auto;
+                padding: 30px;
+            }
+            .content {
+                padding: 40px 30px 60px 30px;
+            }
+            .chapter-title {
+                font-size: 36px;
+            }
+            body {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="book-title">
+                A Ray of Viṣṇu
+            </div>
+            <div class="author-name">
+                Śrīla Bhaktisiddhānta<br>
+                Sarasvatī Ṭhākura
+            </div>
+        </aside>
+
+        <main class="content">
+            <h1 class="chapter-title">Chapter 13</h1>
+            <h2 class="chapter-subtitle">Scholars and Indologists</h2>
+
+            <div class="paragraph">
+                In Śrīla Sarasvatī Ṭhākura's 1924 Vyāsa Pūjā Address, the following passage highlights a theme that arose frequently in discussions with scholars:
+            </div>
+
+            <div class="quote">
+                We do not find God in this world. The devotees, who serve God, out of their mercy show themselves to us. We should follow their conduct and teaching. It is the only path to our well-being. Due to our meagre education and small experience, to most of us the ideas and ways of thinking of the devotees of God appear to be unedifying 'slave mentality'. Let us not indulge in such profane ravings under the urge of mental aberration. On the contrary, our line of thought should be, 'Let the censorious people calumniate us to their hearts' content. We will not mind them. Let us roll in the dust and forget everything in the ecstasy of intoxication by excessive drinking of the strong and tasty wine of the Love of Lord Hari.'
+            </div>
+
+            <div class="paragraph">
+                Śrīla Sarasvatī Ṭhākura's references here to "slave mentality" can be understood to be, at least in part, the reaction of the Indian intellectuals of his time, who had been bewildered by a false presentation of their own culture and religion. As the British had successfully brainwashed many intellectuals in their educational institutions by making them think that their religion was barbarous, backward, etc., the Indians sometimes took it that the ways of the Vaiṣṇavas represented something useless from their past to enslave them in the stereotype fostered by the British of foolish, illiterate "Hindoos".
+            </div>
+
+            <div class="paragraph">
+                Śrīla Bhaktivinoda Ṭhākura comments on this in his book, <em>The Bhāgavat: Its Philosophy, Its Ethics and Its Theology</em>:
+            </div>
+
+            <div class="quote">
+                'What sort of a thing is the Bhāgavat?' asks the European gentleman newly arrived in India. His companion tells him with a serene look, that the Bhāgavat is a book, which his Oriya bearer daily reads in the evening to a number of hearers. It contains a jargon of unintelligible and savage literature of those men who paint their noses with some sort of earth or sandal, and wear beads all over their bodies in order to procure salvation for themselves.
+                <br><br>
+                Another of his companions, who has travelled a little in the interior, would immediately contradict him and say that the Bhāgavat is a Sanskrit work claimed by a sect of men, the Gosvāmīs, who give Mantras like the Popes of Italy, to the common people of Bengal, and pardon their sins on payment of gold enough to defray their social expenses. A third gentleman will repeat a third explanation. Young Bengal, chained up in English thoughts and ideas, and wholly ignorant of the pre-Mohamedan history of his own country, will add one more explanation by saying that the Bhāgavat is a book, containing an account of the life of Krishna, who was an ambitious and immoral man!
+                <br><br>
+                This is all he could gather from his grandmother while yet he did not go to school! Thus the Great Bhāgavat ever remains unknown to the foreigners like the elephant of the six blind men who caught hold of the several parts of the body of the beast! But Truth is eternal and is never injured but for a while by ignorance.
+            </div>
+
+            <div class="editorial-note">
+                [Śrīla Bhaktivinoda Ṭhākura, herein clearly describes the situation that he, and later, Śrīla Sarasvatī Ṭhākura were forced to combat in their preaching. Bengalis, in particular, and Indians, in general, had largely been made into foreigners in their own land, due to the British Sanskritists and educators, who had portrayed Vedic literature and culture as something recent, barbaric, and inferior. Prabhupāda once commented that by this tactic, the British were able to do more harm to Indian culture and religion in their short period of rule than the Mohamedans were ever able to do in their much longer one.]
+            </div>
+
+            <div class="section-break">❦ ❦ ❦</div>
+
+            <div class="paragraph">
+                In 1929 he had a series of meetings with Professor Albert E. Suthers of Ohio State University and spoke to him on a number of topics, including Vaiṣṇavism and Christianity, transmigration, evolution, idolatry, and avatāras. Professor Suthers had come from Bombay to do research for his course in comparative religions at Ohio State University. He went to Calcutta to meet Śrīla Sarasvatī Ṭhākura, who was at that time in Krishnanagar.
+            </div>
+
+            <div class="paragraph">
+                So the professor journeyed there and heard from him for three days consecutively. The professor, as will be seen, was initially very argumentative and skeptical, but was clearly very impressed with Śrīla Sarasvatī Ṭhākura's presentation, and concluded his visit with a pilgrimage to the birthsite of Śrī Caitanya Mahāprabhu.
+            </div>
+
+            <div class="paragraph">
+                Although the following exchanges are a bit lengthy, they are representative of the type of questions posed by Western intellectuals who met Śrīla Sarasvatī Ṭhākura in the course of his preaching, and are entirely relevant for our preachers today, who can study the masterful presentation of Vedic culture and philosophy by Śrīla Bhaktisiddhānta Sarasvatī Ṭhākura as the pinnacle of all human thought and potential.
+            </div>
+
+            <div class="section-break">❦ ❦ ❦</div>
+
+            <div class="dialogue">
+                <div class="speaker">Prof. Suthers:</div>
+                <div class="response">Did the worshippers of Krishna encourage the obscenity of the engravings on many Hindu Temples?</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">Those who are actual worshippers of Krishna are never in favour of indecencies. All decency and morality are entirely confined to the Lotus-Feet of Śrī Krishna. The highest sense of morality of the unadulterated soul consists in its love towards the Over-soul. And the culmination of this pure love is found only in the devotees of Krishna. The best of the moral rules as preached by the noble Jesus, do not come anywhere near the principle of Amorous Love of the devotees of Krishna for service thereof.</div>
+            </div>
+
+            <div class="dialogue">
+                <div class="speaker">Prof. Suthers:</div>
+                <div class="response">Your Holiness seems to have taken a biased view in saying that the good moral precepts of Christ come nowhere near "the morality of amorous love of the devotees of Krishna."</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">Certainly not. We claim to be greater and better Christians than Westerners. Our judgement is not restricted only to secular morality. The morality of the object of spiritual love transcends the supra-natural morality, which again surpasses secular morality. If Christian morality is perfected thereby, then it may be said to receive proper nourishment.</div>
+
+                <div class="response">To a pure soul that remains situated on that transcendentally moral plane of love, the secular moralities appear reduced to the smallness of pygmies. But there is not found any feeling of apathy, nor attachment towards these secular moralities. On the other hand, all moralities wait like maids behind the spiritual moralities to become glorified, being permitted to serve the Lord of transcendental Love.</div>
+
+                <div class="response">The character of a culturist of spiritual love is never devoid of morality. One hostile to morality or fallen from it can never be a spiritual man. In the blaze of the teaching of Śrī Caitanya Deva's ideal, it has been propagated that dissoluteness is not devotion. Its palpable evidence is found when we reflect on the character of Śrī Caitanya Deva or the followers at His Heel.</div>
+
+                <div class="response">The people of the realm of the secular morality concerned with the worldly enjoyments and their renunciation will not be able to grasp in their tiniest brains how fostered by the climax of morality and how adored in the highest degree by all the morality of the universe are the Amorous Sports of Krishna, so much glorified by the noble clan of such high personages of strictly continent character as the devotees of Śrī Caitanya Deva like Śrī Rūpa, Śrī Sanātana, Śrī Raghunātha Dāsa, Śrī Raghunātha Bhaṭṭa, Śrī Gopāla Bhaṭṭa, etc.</div>
+            </div>
+
+            <div class="dialogue">
+                <div class="speaker">Prof. Suthers:</div>
+                <div class="response">How can your Holiness's statements be reconciled with the descriptions that are found about Krishna's amorous sports?</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">Krishna's Amorous Sports are not temporal like the lustful sports of dramatic heroes and heroines like Romeo-Juliet or even ideal spouses. Lust as prevalent in this world is only a mental passion, but the lust of the transcendental region has its own form. Here lust is always goaded by the enemy (one of the six passions); whereas in the transcendental region of Krishna, the loveliness of the spiritual Body of Krishna ever drives the Lust for Krishna, which takes form as sublimated love or the desire to gratify the immaculate senses of Krishna.</div>
+
+                <div class="response">The conductor of the worldly lust is the enemy (passion), and the conductor of love is Krishna. It is the Amorous Sports of Krishna that have appropriateness; but there is no such consistency in the lust born of the body and mind of jīva (creature). Krishna's Amorous Sports are not to be called indecency, because it is Krishna Who is the only one unrivalled Enjoyer, Embodiment of the Real Truth and the Spiritual Despot.</div>
+            </div>
+
+            <div class="dialogue">
+                <div class="speaker">Prof. Suthers:</div>
+                <div class="response">I cannot fully appreciate this; please let me understand it a little more clearly.</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">Suppose there are some angles, two right angles, four right angles, etc. There is the contracted character of a corner in the acute, obtuse or right angle. But in the two right angles called the straight angle, even though called an angle, there is no contractedness or want of straightness, as in the case with angles in general.</div>
+
+                <div class="response">Such is the case with the Autocrat Krishna. There is no want or contractedness or despicable character or indecency in the perfect Entity Krishna, like the circle of 360 degrees, though the communities of enjoyers or renouncers, championing morality or immorality, may, due to the meagreness of their intellect, wrongly regard the lustfulness of Krishna, the result of His despotism which is only His, as vulgar like that of common men and other creatures.</div>
+            </div>
+
+            <div class="editorial-note">
+                [Here we see the professor becoming a bit intimidated by Śrīla Bhaktisiddhānta's unexpectedly confident, mysterious, cerebral, transcendental explanation of a subject clearly beyond his ability to understand, so he changes the subject.]
+            </div>
+
+            <div class="section-break">❦ ❦ ❦</div>
+
+            <div class="dialogue">
+                <div class="speaker">Professor Suthers:</div>
+                <div class="response">The Gītā has admitted the doctrine of the transmigration of the soul. What does your Vaiṣṇava philosophy say about this?</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">The Gītā is not separate from the Vaiṣṇava philosophy. In the Śrīmad-Bhāgavatam has been fully revealed the true import of the doctrine, viz., that of changes of births for the soul. Christianity has disregarded the principle of change of births on the alleged ground that if it is accepted, men will not restrain their sinful propensities, rather they will indulge in vices at their sweet will in their present life, on the expectation that they will be able to make good their sins, guilts, and wrong doing of this life in the course of the following ones.</div>
+
+                <div class="response">But the Śrīmad-Bhāgavatam has crowned the principle with its true significance, by means of a much fuller scientific and philosophical meaning, by giving the instruction about the urgent necessity for ardently taking up and culturing devotion to God even while the human life, not easily available in the after-lives, is at our disposal, without spending a single moment thereof in other useless pursuits.</div>
+
+                <div class="response">If we do not accept the doctrine of transmigration of the soul and adopt the instruction of the Śrīmad-Bhāgavatam, we shall not be able to get over the all-devouring disaster of regarding matter as the sole object of our concern, which has kept its mouth wide open.</div>
+            </div>
+
+            <div class="paragraph">
+                Though most of the Christians do not admit transmigration, yet many intellectual giants of the Christian world have shown several instances of their acceptance of the doctrine. Even in the Bible we find:
+            </div>
+
+            <div class="quote">
+                "And as Jesus passed by, he saw a man who was blind from his birth. And his disciples asked him, saying, —'Master, who had committed the sin? This man or his parents, that he was born blind?'"
+                <div class="verse-ref">— St. John 9, 1-2</div>
+            </div>
+
+            <div class="paragraph">
+                It is seen that even some Christian Fathers clearly gave instructions about transmigration. Origen said:
+            </div>
+
+            <div class="quote">
+                "Is it not more in conformity with reason that every soul for certain mysterious reasons is introduced into a body and introduced according to its deserts and former actions?"
+                <div class="verse-ref">— Origen contra celscea, I xxxii</div>
+            </div>
+
+            <div class="paragraph">
+                "I am sure that I, such as you see me here, have lived a thousand times, and I have to come again another thousand times" says Goethe.
+            </div>
+
+            <div class="paragraph">
+                What the Greeks called 'Metempsychosis' or what is 'Transmigration' in the English language, was at one time, more or less, admitted in ancient Greece, Egypt, and many places in the west. Some say that the apostles of Christ the Great, failing to reconcile their previous and subsequent conclusions with the doctrine of transmigration, were compelled to discard it. Yet no rationalist among the Christians has been able to refute the doctrine on the basis of sound reasoning; on the other hand, most of them have had to admit it even. Heredotus, Pindar, Plato, etc. have all accepted it.
+            </div>
+
+            <div class="paragraph">
+                Huxley, the illustrious scientist of the nineteenth century, has written in his religious work, <em>Evolution and Ethics</em>:
+            </div>
+
+            <div class="quote">
+                "None but very hasty thinkers will reject it on the ground of inherent absurdity, like the doctrine of evolution itself, viz., that of transmigration which has its root in the world of reality, and it may claim such support as the great argument of 'analogy' is capable of supplying."
+            </div>
+
+            <div class="paragraph">
+                Professor Lutoloski has said:
+            </div>
+
+            <div class="quote">
+                "I cannot give up my conviction of a previous existence on earth before my birth, and I have the certainty to be born again after my death, until I have assimilated all human experiences, having been many times male and female, wealthy and poor, free and enslaved, generally having experienced all conditions of human existence."
+            </div>
+
+            <div class="paragraph">
+                But such transmigration theories of the empiricists of the west or those of the western philosophers of the seventeenth and eighteenth centuries like Franciscus Mercurius Helmont, Leichtenburg, Lessing, Herder, Schopenhauer, etc. or of Jalaluddin Rumi of the Sufi sect of Persia, or of the Theosophists, or of the Indian Nyāya philosophy under the aphorism: "From the desire for the mother's breast milk due to the habit of the previous life," or of the Buddhistic doctrine of annihilation in matter—these are assailable by various hostile reasonings and having their origin in inductive concepts are incomplete and imperfect.
+            </div>
+
+            <div class="paragraph">
+                But the conclusion in this respect of the Śrīmad-Bhāgavatam is fully flawless and significant. The Vaiṣṇava philosophy having shown the royal road to the acquirement of the highest blessedness even in the present life, there is no need of waiting for future lives. As such, the Vaiṣṇava philosophy is thoroughly aloof from all wrangling full of useless riddles over the doctrine of transmigration.
+            </div>
+
+            <div class="editorial-note">
+                [Now we will see that the professor, after prolonged exposure to Śrīla Bhaktisiddhānta Sarasvatī Ṭhākura, is beginning to realize the ācārya's clear superiority on all fronts: intellectual, scholarship and spiritual realization. Still, though now more respectful, he clings to his Christian chauvinism, which is evident from the next question.]
+            </div>
+
+            <div class="section-break">❦ ❦ ❦</div>
+
+            <div class="dialogue">
+                <div class="speaker">Professor Suthers:</div>
+                <div class="response">I am able to feel the super-excellence of the Vaiṣṇava philosophy among the Indian Philosophies. But to my mind, the acceptance of idolatry in the Vaiṣṇava philosophy like the other Indian philosophies seems to be a stigma in it.</div>
+
+                <div class="speaker">Śrīla Sarasvatī Ṭhākura:</div>
+                <div class="response">Idolatry has never been accepted in the Vaiṣṇava philosophy; on the other hand, it has been more or less accepted in the other philosophies, at least mentally, if not in so many words. In the very word 'Bhagavān' (God) have accumulated all the excellences that are there in the human and supra-human conceptions.</div>
+
+                <div class="response">The existence of Majesty, viz., the furthermost limits of both vastness and minuteness, is a characteristic of God. The second characteristic is His Omnipotence. If one understands the word 'omnipotence' to mean what is conceivable by the human intellect or what is possible for man, one is wrong. God is Omnipotent, because what is impossible according to the human intellect is within the ambit of the inscrutable power of God.</div>
+
+                <div class="response">Due to His inscrutable power, He is simultaneously both with and without Form. It will be the denial of His inscrutable power, if you say that He cannot have His Form, or He has not his Eternal Form, only having a Form for the time being, none in the end. By dint of his inscrutable power, He is with His Eternal Sportive Form before a liberated soul conversant with the service of His Potencies.</div>
+
+                <div class="response">Contemplation only on formlessness is rather unnatural and devoid of all differential excellence. God is always All-Good, All-Glory and All-Beauty. His Beauty is visible only to the transcendental eye. God is the Transcendental Reality, Pure, Full and sentient in essence and Sentient Essence is His Form.</div>
+            </div>
+
+            <div class="paragraph">
+                It is true that God has no material body, but He has His Sat (eternal), Cit (all-Sentient), Ānanda (all-Blissful), Transcendental Body visible only to the eye that is clear (devoid of matter). To the material eye, God is Formless, but to the transcendental eye He is with His Body of Cit or All-Sentience.
+            </div>
+
+            <div class="paragraph">
+                The Mūrtis (forms of body) prepared and worshipped by those who have not seen this Cit-Body of God with their true and eternal eye cleansed with the collyrium of the Love of God are of course idols and all the worshippers of those idols must be idolators. The worship of mūrtis of God prepared from imagination may be called idolatry.
+            </div>
+
+            <div class="paragraph">
+                Suppose I, who have not seen Jacob, make a mūrti of his out of imagination, this mūrti is not the replica of his form. Besides, if Jacob is a creature of this world, whose body, mind and soul are different from one another, his photograph being only the replica of his material body is different from his eternal and intrinsically true form.
+            </div>
+
+            <div class="paragraph">
+                But God with His Sat-cit-ānanda Body is not such a thing; His Body and Soul are not different from each other; nor are his Name and Soul, His Attribute and Figure, His Attribute and Soul, His Sport and Soul, His Sport and Figure, His Sport and Attribute, different. If a pure entity or unmixed soul sees that Eternal Form of God and receives It in his own pure receptacle and then places this Transcendental Form in the world from his heart as illuming the intrinsically and essentially true Form of God, that never deserves to be called an idol.
+            </div>
+
+            <div class="paragraph">
+                Just as even by coming down to this phenomenal world, God remains untouched by the influence of māyā by dint of His inscrutable power, so does His true Form, too, as revealed to the unmixed entity of His devotee, remain above it even though brought down here. For this reason the Vaiṣṇava philosophy terms Śrī-mūrti as His 'Arcāvatāra' (Worshipable Descent).
+            </div>
+
+            <div class="paragraph">
+                The conception of God without Form in contra-distinction to His Essential Form is as calamitous as is the falsely imagined Form of God for one competent to see His True Form. Such insignificant processes occur before attaining to the Real Entity and do only grope in the darkness. The Śrī-Vigraha of the Vaiṣṇava philosophy cannot but be the direct indication of the Essential Form of God.
+            </div>
+
+            <div class="paragraph">
+                By way of an imperfect comparison it may be said to be the proxy of the essential Form of God which is beyond the cognisance of the material eye, just as there are, in art and science, crude representations of invisible matter. How can those, that have not in their heart Love of God which is the true function of the soul and is the science of the true knowledge of…
+            </div>
+
+            <div class="section-break">❦ ❦ ❦</div>
+
+            <div style="text-align: center; color: #8b7d6b; font-style: italic; margin: 60px 0; font-size: 18px;">
+                To be continued in class discussion...
+            </div>
+        </main>
+    </div>
+</body>
+</html>
