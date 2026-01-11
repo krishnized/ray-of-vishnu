@@ -24,7 +24,7 @@
 
         body {
             font-family: 'Crimson Text', serif;
-            font-size: clamp(22px, 2.5vw, 32px);
+            font-size: clamp(24px, 3vw, 36px);
             line-height: 1.75;
             color: var(--primary-text);
             background: linear-gradient(135deg, #f8f8f8 0%, #e8e8e8 100%);
@@ -80,12 +80,13 @@
 
         .content {
             padding: clamp(40px, 6vw, 80px) clamp(40px, 8vw, 120px) 100px clamp(30px, 6vw, 80px);
-            max-width: none;
+            max-width: 45em; /* ~65-70 characters at current font size */
+            margin-right: auto;
         }
 
         .chapter-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(42px, 6vw, 64px);
+            font-size: clamp(48px, 7vw, 72px);
             font-weight: 600;
             color: #6b6b6b;
             margin-bottom: 15px;
@@ -95,7 +96,7 @@
 
         .chapter-subtitle {
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(24px, 3.5vw, 36px);
+            font-size: clamp(28px, 4vw, 40px);
             font-weight: 400;
             color: #7a7a7a;
             margin-bottom: 50px;
@@ -148,7 +149,7 @@
             font-weight: 600;
             color: #6b6b6b;
             font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(20px, 2.8vw, 28px);
+            font-size: clamp(24px, 3.2vw, 32px);
             margin-bottom: 8px;
         }
 
@@ -163,7 +164,7 @@
             margin: 30px 0;
             border-radius: 8px;
             border-left: 3px solid #7a7a7a;
-            font-size: clamp(18px, 2.2vw, 24px);
+            font-size: clamp(20px, 2.6vw, 28px);
             color: #4a4a4a;
         }
 
@@ -180,12 +181,50 @@
             text-align: center;
             margin: 50px 0;
             color: #8b7d6b;
-            font-size: clamp(20px, 3vw, 32px);
+            font-size: clamp(24px, 3.5vw, 36px);
         }
 
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
+        }
+
+        /* Reading Progress Indicator */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(139, 125, 107, 0.2);
+            z-index: 1000;
+        }
+
+        .reading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #8b7d6b, #6b6b6b);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .reading-time {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: clamp(14px, 1.8vw, 18px);
+            font-family: 'Cormorant Garamond', serif;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.6s ease;
+        }
+
+        .reading-time:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-1px);
         }
 
         /* Print styles */
@@ -210,17 +249,34 @@
             }
             .content {
                 padding: 40px 30px 60px 30px;
+                max-width: 100%;
             }
             .chapter-title {
-                font-size: 36px;
+                font-size: 42px;
             }
             body {
-                font-size: 18px;
+                font-size: 22px;
+            }
+            .reading-time {
+                top: 15px;
+                right: 15px;
+                font-size: 14px;
+                padding: 6px 12px;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Reading Progress Indicator -->
+    <div class="reading-progress">
+        <div class="reading-progress-bar" id="progressBar"></div>
+    </div>
+    
+    <!-- Reading Time Indicator -->
+    <div class="reading-time" id="readingTime">
+        <span id="timeRemaining">12 min read</span>
+    </div>
+
     <div class="container">
         <aside class="sidebar">
             <div class="book-title">
@@ -445,5 +501,88 @@
             </div>
         </main>
     </div>
+
+    <script>
+        // Reading progress and time estimation
+        class ReadingTracker {
+            constructor() {
+                this.progressBar = document.getElementById('progressBar');
+                this.timeDisplay = document.getElementById('timeRemaining');
+                this.content = document.querySelector('.content');
+                
+                // Average reading speed (words per minute)
+                this.readingSpeed = 220;
+                
+                // Calculate total reading time
+                this.totalWords = this.countWords();
+                this.totalReadingTime = Math.ceil(this.totalWords / this.readingSpeed);
+                
+                this.init();
+            }
+            
+            countWords() {
+                const text = this.content.innerText || this.content.textContent;
+                return text.trim().split(/\s+/).length;
+            }
+            
+            updateProgress() {
+                const windowHeight = window.innerHeight;
+                const documentHeight = document.documentElement.scrollHeight - windowHeight;
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Calculate progress percentage
+                const progress = Math.min((scrollTop / documentHeight) * 100, 100);
+                
+                // Update progress bar
+                this.progressBar.style.width = progress + '%';
+                
+                // Calculate remaining reading time
+                const remainingProgress = Math.max(0, 100 - progress);
+                const remainingTime = Math.ceil((this.totalReadingTime * remainingProgress) / 100);
+                
+                // Update time display
+                if (progress >= 99) {
+                    this.timeDisplay.innerHTML = '<span style="color: #90EE90;">✓ Complete</span>';
+                } else if (remainingTime <= 1) {
+                    this.timeDisplay.innerHTML = '<span>< 1 min left</span>';
+                } else {
+                    this.timeDisplay.innerHTML = `<span>${remainingTime} min left</span>`;
+                }
+                
+                // Show total time on hover/focus
+                this.timeDisplay.title = `Total reading time: ${this.totalReadingTime} minutes (${this.totalWords} words)`;
+            }
+            
+            init() {
+                // Initial display
+                this.timeDisplay.innerHTML = `<span>${this.totalReadingTime} min read</span>`;
+                
+                // Throttled scroll handler for performance
+                let ticking = false;
+                const handleScroll = () => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => {
+                            this.updateProgress();
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                };
+                
+                // Bind scroll event
+                window.addEventListener('scroll', handleScroll, { passive: true });
+                
+                // Initial call
+                this.updateProgress();
+            }
+        }
+        
+        // Initialize reading tracker when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => new ReadingTracker());
+        } else {
+            new ReadingTracker();
+        }
+    </script>
 </body>
 </html>
