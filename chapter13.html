@@ -50,14 +50,27 @@
             display: none;
         }
 
+        .book-title {
+            position: absolute;
+            top: 50px;
+            font-size: 24px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
         .author-name {
-            font-size: 18px;
+            font-size: 26px;
             text-align: center;
-            color: #222;
+            color: #fff;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
             line-height: 1.5;
-            background: rgba(255,255,255,0.85);
-            padding: 15px 20px;
-            border-radius: 4px;
+        }
+
+        .author-name span {
+            font-size: 18px;
+            opacity: 0.8;
         }
 
         .content {
@@ -106,10 +119,11 @@
         </main>
 
         <aside class="author">
+            <div class="book-title">Ray of Vishnu</div>
             <div class="author-name">
                 Śrīla Bhaktisiddhānta<br>
                 Sarasvatī Ṭhākura<br>
-                <span style="font-size: 14px; color: #555;">(1874–1937)</span>
+                <span>(1874–1937)</span>
             </div>
         </aside>
     </div>
