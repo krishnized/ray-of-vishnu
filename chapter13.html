@@ -20,7 +20,7 @@
 
         .page {
             display: grid;
-            grid-template-columns: 1fr 320px;
+            grid-template-columns: 1fr max(20vw, 280px);
             min-height: 100vh;
         }
 
@@ -28,7 +28,7 @@
             position: fixed;
             right: 0;
             top: 0;
-            width: 320px;
+            width: max(20vw, 280px);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -53,7 +53,7 @@
         .book-title {
             position: absolute;
             top: 50px;
-            font-size: 24px;
+            font-size: 1.6vw;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             color: #fff;
@@ -61,7 +61,7 @@
         }
 
         .author-name {
-            font-size: 26px;
+            font-size: 1.8vw;
             text-align: center;
             color: #fff;
             text-shadow: 0 2px 8px rgba(0,0,0,0.4);
@@ -69,7 +69,7 @@
         }
 
         .author-name span {
-            font-size: 18px;
+            font-size: 1.2vw;
             opacity: 0.8;
         }
 
@@ -101,12 +101,14 @@
         .time { display: none; }
         .loading { color: #888; font-style: italic; }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1000px) {
             .page { grid-template-columns: 1fr; }
             .author { position: static; width: 100%; height: 200px; padding-bottom: 20px; }
             .author::before { opacity: 0.25; }
+            .book-title { font-size: 16px; }
+            .author-name { font-size: 20px; }
+            .author-name span { font-size: 14px; }
             .content { padding: 30px 25px 80px; }
-            .time { left: auto; right: 25px; }
         }
     </style>
 </head>
