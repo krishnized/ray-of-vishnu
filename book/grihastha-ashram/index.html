@@ -17,7 +17,7 @@
         body {
             font-family: 'Cormorant Garamond', Georgia, serif;
             font-size: clamp(20px, 2.4vw, 28px);
-            line-height: 1.8;
+            line-height: 1.72;
             color: #1a1a1a;
             background: #fff;
             /* Use clip instead of hidden to not break sticky */
@@ -64,7 +64,7 @@
 
         .sidebar-toggle {
             position: fixed;
-            top: calc(50%-22px);
+            top: calc(50% - 22px);
             right: max(20vw, 280px);
             width: 44px;
             height: 44px;
@@ -352,7 +352,8 @@
         /* Sticky headers slide up as their section exits */
         /* Anchor is now first-child, header is second */
         #text .section > h1,
-        #text .section > h2 {
+        #text .section > h2,
+        #text .section > h3 {
             transform: translateY(calc(var(--section-exit) * -10rem));
         }
         /*
@@ -429,7 +430,7 @@
         #text p {
             max-width: 72rem;
             margin: 0 auto;
-            padding-bottom: 1.5em;
+            padding-bottom: 1.08em;
             scroll-margin-top: 4em;
             text-align: justify;
             hyphens: auto;
@@ -713,7 +714,8 @@
             // IDs go on sections, not headers, so navigation scrolls to section start
             let wrapped = result.join('\n');
             // Extract ID from headers and move to section (anchor is sibling before header)
-            wrapped = wrapped.replace(/<a class="header-anchor"([^>]*)data-for="([^"]+)"([^>]*)>([^<]*)<\/a><h([12]) id="[^"]+">/g,
+            // H1, H2, H3 all create sections
+            wrapped = wrapped.replace(/<a class="header-anchor"([^>]*)data-for="([^"]+)"([^>]*)>([^<]*)<\/a><h([123]) id="[^"]+">/g,
                 '</section><section class="section" id="$2"><a class="header-anchor"$1data-for="$2"$3>$4</a><h$5>');
             // Remove leading </section> and add trailing </section>
             wrapped = wrapped.replace(/^<\/section>/, '');
