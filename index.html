@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(18px, 2.4vw, 24px);
+            line-height: 1.8;
+            color: #1a1a1a;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .title {
+            font-size: clamp(36px, 5vw, 54px);
+            font-weight: 500;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 15px;
+        }
+
+        .lang-btn {
+            padding: 10px 20px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.1em;
+            background: transparent;
+            border: 2px solid #1a1a1a;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 0.1em;
+        }
+
+        .lang-btn.active {
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .lang-btn:hover {
+            opacity: 0.7;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .book-card {
+            padding: 30px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card:hover {
+            border-color: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .book-title {
+            font-size: 1.5em;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .book-author {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .toc {
+            list-style: none;
+            font-size: 0.95em;
+            flex-grow: 1;
+        }
+
+        .toc li {
+            margin: 8px 0;
+            padding-left: 15px;
+            border-left: 2px solid #e0e0e0;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        .toc li:hover {
+            border-left-color: #1a1a1a;
+            color: #1a1a1a;
+        }
+
+        .toc .level-2 {
+            margin-left: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 40px;
+            color: #888;
+            font-style: italic;
+        }
+
+        .error {
+            padding: 40px;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 4px;
+            color: #c33;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 40px 20px; }
+            .header { flex-direction: column; gap: 20px; }
+            .books-grid { grid-template-columns: 1fr; }
+            .book-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Books</h1>
+            <div class="lang-switch">
+                <button class="lang-btn active" data-lang="en">ENGLISH</button>
+                <button class="lang-btn" data-lang="ru">РУССКИЙ</button>
+            </div>
+        </div>
+
+        <div id="books-list" class="books-grid">
+            <div class="loading">Loading books...</div>
+        </div>
+    </div>
+
+    <script>
+        const booksList = document.getElementById('books-list');
+        const langBtns = document.querySelectorAll('.lang-btn');
+        let currentLang = 'en';
+        let booksData = {};
+
+        // Language switcher
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                langBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentLang = e.target.dataset.lang;
+                renderBooks();
+            });
+        });
+
+        async function loadBooks() {
+            try {
+                // Known book paths
+                const bookFolders = ['grihastha-ashram'];
+
+                for (const folder of bookFolders) {
+                    await loadBook(folder);
+                }
+
+                renderBooks();
+            } catch (error) {
+                booksList.innerHTML = `<div class="error">Error loading books: ${error.message}</div>`;
+            }
+        }
+
+        async function loadBook(folder) {
+            const langs = ['en', 'ru'];
+            const bookData = {
+                folder: folder,
+                languages: {}
+            };
+
+            for (const lang of langs) {
+                try {
+                    const response = await fetch(`book/${folder}/${lang}.md`);
+                    if (response.ok) {
+                        const text = await response.text();
+                        bookData.languages[lang] = parseMarkdown(text);
+                    }
+                } catch (e) {
+                    // Language not available
+                }
+            }
+
+            if (Object.keys(bookData.languages).length > 0) {
+                booksData[folder] = bookData;
+            }
+        }
+
+        function parseMarkdown(text) {
+            const lines = text.split('\n');
+            const headers = [];
+            let title = '';
+            let author = '';
+            let foundFirstH1 = false;
+
+            for (let line of lines) {
+                // Book title = first H1
+                if (line.match(/^# \*?\*?[^#]/) && !foundFirstH1) {
+                    title = line.replace(/^#\s*/, '').replace(/\*\*/g, '').trim();
+                    foundFirstH1 = true;
+                    continue;
+                }
+
+                // Author
+                if (!author) {
+                    const authorMatch = line.match(/^\*\*(.+?)\*\*$/) || line.match(/^_(.+?)_$/);
+                    if (authorMatch && foundFirstH1) {
+                        author = authorMatch[1].replace(/^by\s+/i, '').trim();
+                        continue;
+                    }
+                }
+
+                // Chapter headers = H1 after first one
+                if (line.match(/^# \*?\*?[^#]/) && foundFirstH1) {
+                    const headerText = line.replace(/^#\s*/, '').replace(/\*\*/g, '').trim();
+                    headers.push(headerText);
+                }
+            }
+
+            return { title, author, headers };
+        }
+
+        function renderBooks() {
+            if (Object.keys(booksData).length === 0) {
+                booksList.innerHTML = '<div class="loading">No books found</div>';
+                return;
+            }
+
+            booksList.innerHTML = '';
+
+            for (const [folder, book] of Object.entries(booksData)) {
+                const langData = book.languages[currentLang];
+                if (!langData) continue;
+
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.style.cursor = 'pointer';
+
+                const toc = langData.headers
+                    .map(h => `<li>${h}</li>`)
+                    .join('');
+
+                card.innerHTML = `
+                    <div class="book-title">${langData.title}</div>
+                    <div class="book-author">${langData.author}</div>
+                    <ul class="toc">${toc || '<li style="color:#ccc;">No chapters found</li>'}</ul>
+                `;
+
+                card.addEventListener('click', () => {
+                    window.location.href = `/book/${folder}/?lang=${currentLang}`;
+                });
+
+                booksList.appendChild(card);
+            }
+        }
+
+        // Load books on page load
+        loadBooks();
+    </script>
+</body>
+</html>

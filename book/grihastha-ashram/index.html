@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            overscroll-behavior-x: none;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: clamp(20px, 2.4vw, 28px);
+            line-height: 1.8;
+            color: #1a1a1a;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: grid;
+            grid-template-columns: 1fr max(20vw, 280px);
+            min-height: 100vh;
+            transition: grid-template-columns 0.3s ease;
+        }
+
+        body.sidebar-collapsed .page {
+            grid-template-columns: 1fr 60px;
+        }
+
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: max(20vw, 280px);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #fff 100%);
+            border-left: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, width 0.3s ease;
+            z-index: 40;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(calc(100% - 0px));
+        }
+
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 80px;
+            right: max(20vw, 280px);
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            color: #666;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: right 0.3s ease, transform 0.2s, color 0.2s, opacity 0.2s;
+            z-index: 45;
+            appearance: none;
+            border: none;
+            background: none;
+            opacity: .7;
+        }
+
+        .sidebar-toggle:focus-visible {
+            outline: 2px solid #666;
+            outline-offset: 2px;
+            opacity: 1;
+        }
+
+        .sidebar-toggle:hover {
+            color: #1a1a1a;
+            opacity: 1;
+        }
+
+        body.sidebar-collapsed .sidebar-toggle {
+            right: 10px;
+            transform: scaleX(-1);
+        }
+
+        .author {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .author {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            visibility: hidden;
+        }
+
+        .book-title {
+            font-size: clamp(12px, 1.2vw, 16px);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .author-name {
+            font-size: clamp(14px, 1.4vw, 18px);
+            color: #1a1a1a;
+            line-height: 1.4;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 8px;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        .lang-btn {
+            flex: 1;
+            padding: 8px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.8em;
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #1a1a1a;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .lang-btn.active {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #1a1a1a;
+        }
+
+        .lang-btn:hover:not(.active) { background: #f0f0f0; }
+
+        /* Content navigation (top & bottom) */
+        .content-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 40px;
+        }
+        .content-nav.bottom {
+            border-bottom: none;
+            border-top: 1px solid #eee;
+            margin-bottom: 0;
+            margin-top: 60px;
+            padding-top: 30px;
+        }
+
+        .nav-link {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.85em;
+            color: #767676;
+            text-decoration: none;
+            transition: color 0.2s;
+            max-width: 45%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .nav-link:focus-visible {
+            outline: 2px solid #666;
+            outline-offset: 2px;
+        }
+        .nav-link:hover { color: #1a1a1a; }
+        .nav-link.hidden { visibility: hidden; }
+        .nav-link:disabled { cursor: default; opacity: 0.5; }
+        .nav-link.prev::before { content: '← '; }
+        .nav-link.next::after { content: ' →'; }
+        .nav-link.next { text-align: right; }
+
+        /* Sidebar TOC */
+        .toc {
+            flex: 1;
+            overflow-y: auto;
+            padding-top: 15px;
+            margin: 15px -20px 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.collapsed .toc {
+            opacity: 0;
+            height: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            border: none;
+            visibility: hidden;
+        }
+
+        .toc-item {
+            display: block;
+            padding: 8px 15px;
+            font-size: 0.75em;
+            color: #666;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .toc-item.sub {
+            padding-left: 25px;
+            font-size: 0.7em;
+            color: #767676;
+        }
+
+        .toc-item:hover { color: #1a1a1a; background: #f5f5f5; }
+        .toc-item:focus-visible { outline: 2px solid #666; outline-offset: -2px; }
+        .toc-item.active { color: #1a1a1a; box-shadow: inset 2px 0 0 #ccc; }
+        .toc-item.sub.active { color: #1a1a1a; background: transparent; box-shadow: inset 2px 0 0 #ccc; }
+        .toc-item.sub:hover { color: #1a1a1a; }
+
+        .home-link {
+            display: inline-block;
+            color: #767676;
+            text-decoration: none;
+            transition: color 0.2s;
+            margin-bottom: 12px;
+        }
+        .home-link:hover { color: #1a1a1a; }
+        .home-link:focus-visible { outline: 2px solid #666; outline-offset: 2px; }
+        .home-link svg { width: 20px; height: 20px; }
+
+        .content {
+            padding: 60px 100px 120px 80px;
+            max-width: 42em;
+            margin: 0 auto;
+        }
+
+        #text h1, #text h2, #text h3, #text h4, #text h5, #text h6 {
+            scroll-margin-top: 20px;
+            position: sticky;
+            top: 0;
+            padding-top: 0.3em;
+            padding-bottom: 0;
+            margin-bottom: 0.8em;
+            z-index: 10;
+            /* Scroll-driven shrink animation - shrinks as header approaches sticky position */
+            animation: shrink-header linear both;
+            animation-timeline: view(block 160px 100%);
+            animation-range: entry 0% entry 100%;
+            transform-origin: center top;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Blur background as pseudo-element - independent of text */
+        #text h1::before, #text h2::before, #text h3::before, #text h4::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 150%;
+            background: radial-gradient(ellipse 120% 140% at 50% 0%,
+                rgba(255,255,255,0.95) 0%,
+                rgba(255,255,255,0.7) 40%,
+                rgba(255,255,255,0) 70%);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 0%, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 0%, black 30%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Custom property for section exit progress - enables inheriting animated value */
+        @property --section-exit {
+            syntax: '<number>';
+            initial-value: 0;
+            inherits: true;
+        }
+
+        @keyframes shrink-header {
+            from { scale: 1; }
+            to { scale: 0.75; }
+        }
+
+        @keyframes section-exit {
+            from { --section-exit: 0; }
+            to { --section-exit: 1; }
+        }
+
+        #text .section {
+            /* Each section is a containing block for its sticky header */
+            /* display: flow-root creates new BFC, preventing margin collapse */
+            display: flow-root;
+            /* Animate exit progress when section leaves viewport from top */
+            /* exit 80% = only last 20% of section visible, exit 100% = section fully gone */
+            animation: section-exit linear both;
+            animation-timeline: view();
+            animation-range: exit 80% exit 100%;
+        }
+
+        /* Sticky headers slide up as their section exits */
+        #text .section > h1:first-child,
+        #text .section > h2:first-child {
+            transform: translateY(calc(var(--section-exit) * -10rem));
+        }
+        /*
+        #text h1::after, #text h2::after, #text h3::after, #text h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -10px;
+            height: 10px;
+            background: linear-gradient(to bottom, #fff, transparent);
+            pointer-events: none;
+        }
+        */
+
+        .header-anchor {
+            opacity: 0.3;
+            color: #999;
+            text-decoration: none;
+            font-weight: normal;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            margin-right: 0.4em;
+            font-size: 0.75em;
+            vertical-align: middle;
+            position: relative;
+            top: -0.1em;
+        }
+
+        .header-anchor:hover { opacity: 1; color: #666; }
+
+        #text h1 {
+            font-size: clamp(32px, 4vw, 64px);
+            font-weight: 500;
+            margin: 60px 0 0; padding-bottom:  60px;
+        }
+
+        #text h1:first-child { margin-top: 0; }
+
+        #text h2 {
+            font-size: clamp(26px, 3vw, 48px);
+            font-weight: 400;
+            font-style: italic;
+            color: #333;
+            margin: 50px 0 0; padding-bottom:  25px;
+        }
+
+        #text h3 {
+            font-size: clamp(22px, 2.5vw, 30px);
+            font-weight: 500;
+            margin: 40px 0 0; padding-bottom:  20px;
+            color: #333;
+        }
+
+        #text h4 {
+            font-size: clamp(18px, 2vw, 24px);
+            font-weight: 500;
+            margin: 30px 0 0; padding-bottom:  15px;
+            color: #444;
+        }
+
+        #text p {
+            margin-bottom: 1.5em;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        /* Author attribution line (paragraph with only italic text) */
+        #text p:has(> em:only-child) {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        #text blockquote {
+            font-style: italic;
+            margin: 2em 0;
+            padding-left: 1.5em;
+            border-left: 2px solid #ccc;
+            color: #444;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        #text blockquote p { margin-bottom: 0.8em; }
+        #text blockquote p:last-child { margin-bottom: 0; }
+
+        #text ul, #text ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        #text li { margin-bottom: 0.5em; }
+        #text em { font-style: italic; }
+        #text strong { font-weight: 600; }
+
+        #text hr {
+            border: none;
+            text-align: center;
+            margin: 3em 0;
+            color: #999;
+        }
+
+        #text hr::before { content: '* * *'; }
+
+        .loading { color: #888; font-style: italic; }
+
+        .error {
+            padding: 20px;
+            background: #fee;
+            border: 1px solid #fcc;
+            border-radius: 4px;
+            color: #c33;
+        }
+
+        .copied-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .copied-toast.show { opacity: 1; }
+
+        /* Mobile sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar-overlay.visible { opacity: 1; }
+
+        @media (max-width: 1000px) {
+            .page { grid-template-columns: 1fr; }
+            body.sidebar-collapsed .page { grid-template-columns: 1fr; }
+            .content { padding: 30px 25px 80px; }
+            .header-anchor { display: none; }
+
+            /* Mobile sidebar as popup overlay */
+            .sidebar {
+                position: fixed;
+                right: 0;
+                top: 0;
+                width: min(320px, 85vw);
+                height: 100vh;
+                border-left: 1px solid #e0e0e0;
+                border-top: none;
+                padding: 30px 20px;
+                transform: translateX(100%);
+                box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+                z-index: 100;
+            }
+            .sidebar.collapsed { transform: translateX(100%); }
+            .sidebar:not(.collapsed) { transform: translateX(0); }
+
+            /* Hide toggle on mobile - use swipe instead */
+            .sidebar-toggle { display: none; }
+
+            .sidebar-overlay { display: block; }
+            body:not(.sidebar-collapsed) .sidebar-overlay { pointer-events: auto; }
+            body.sidebar-collapsed .sidebar-overlay { pointer-events: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <main class="content">
+            <nav class="content-nav top" aria-label="Chapter navigation">
+                <button type="button" class="nav-link prev" id="prev-top"></button>
+                <button type="button" class="nav-link next" id="next-top"></button>
+            </nav>
+            <div id="text"><p class="loading">Loading...</p></div>
+            <nav class="content-nav bottom" aria-label="Chapter navigation">
+                <button type="button" class="nav-link prev" id="prev-bottom"></button>
+                <button type="button" class="nav-link next" id="next-bottom"></button>
+            </nav>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="author">
+                    <a href="/index.html" class="home-link" aria-label="Library"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="4" width="3" height="16" rx="0.5"/><rect x="8" y="4" width="3" height="16" rx="0.5"/><rect x="13" y="4" width="3" height="16" rx="0.5"/><rect x="18" y="5" width="3" height="16" rx="0.5" transform="rotate(-12 18 13)"/></svg></a>
+                    <div class="book-title" id="book-title-sidebar">Loading...</div>
+                    <div class="author-name" id="author-name">Loading...</div>
+                </div>
+
+                <div class="lang-switch">
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ru">РУ</button>
+                </div>
+            </div>
+
+            <div class="toc" id="toc"></div>
+        </aside>
+        <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar" title="Toggle sidebar">›</button>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="copied-toast" id="toast">Link copied!</div>
+
+    <script>
+        let currentLang = 'en';
+        let bookData = { en: null, ru: null };
+        let currentChapterIndex = 0;
+        let chapters = [];
+        let headerObserver = null;
+
+        // Header ID map: Russian -> English (for consistent anchors across languages)
+        const headerMap = {
+            // H1 chapters
+            'часть 1': 'part-one',
+            'часть 2': 'part-two',
+            'письма грихастх': 'letters',
+            'глоссарий': 'glossary',
+            'над книгой работали': 'credits',
+            // H2 sections
+            'предисловие': 'preface',
+            'введение': 'introduction',
+            'жить с богом': 'living-with-god',
+            'путь к созданию своей семьи, или путь в грихастха-ашрам': 'the-path-to-creating-ones-own-family-or-the-path-to-ghastha-rama',
+            'школа формирования наилучших качеств характера. брахмачари-ашрам.': 'the-school-of-forming-the-best-qualities-of-character-brahmacr-rama',
+            'переходный период, брахмачари-грихастха.': 'the-transitional-period-from-brahmacr-to-ghastha',
+            'варна (профессия)': 'vara-profession',
+            'помолвка': 'engagement',
+            'брачный союз': 'the-marital-union',
+            'начало семейного счастья': 'the-beginning-of-family-happiness',
+            'путь долга и величие человека': 'the-path-of-duty-and-the-greatness-of-the-human-being',
+            'психология мужчины и женщины': 'the-psychology-of-man-and-woman',
+            'цивилизованная жизнь': 'civilized-life',
+            'любовь': 'love',
+            'вожделение': 'lust',
+            'дети. награда и наказание': 'children-reward-and-punishment',
+            'в век кали': 'in-the-age-of-kali',
+            'слушание о кришне – лекарство от влияния кали-юги': 'hearing-about-ka-the-medicine-against-the-influence-of-kali-yuga',
+            'кто мой спутник в жизни?': 'who-is-my-life-companion',
+            'семью невозможно разрушить извне': 'a-family-cannot-be-destroyed-from-the-outside',
+            'превратности судьбы': 'the-twists-of-fate',
+            'несчастье': 'unhappiness',
+            'смерть и развод': 'death-and-divorce',
+            'опасности семейной жизни': 'the-dangers-of-family-life',
+            'поддерживайте веру друг в друге': 'support-faith-in-one-another',
+            'мужчинам': 'to-men',
+            'женщинам': 'to-women',
+            'красота': 'beauty',
+            'ложь кали-юги': 'the-lie-of-kali-yuga',
+            'духовный учитель': 'the-spiritual-master',
+            'счастье': 'happiness',
+            'послесловие': 'afterword'
+        };
+
+        function slugify(text) {
+            const clean = text.toLowerCase().replace(/\*\*/g, '').trim();
+            if (headerMap[clean]) return headerMap[clean];
+            return clean
+                .replace(/[^\w\s\u0400-\u04FF-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+        }
+
+        function parseMarkdown(md) {
+            let html = md;
+            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            html = html.replace(/^###### (.+)$/gm, (_, t) => makeHeader(6, t));
+            html = html.replace(/^##### (.+)$/gm, (_, t) => makeHeader(5, t));
+            html = html.replace(/^#### (.+)$/gm, (_, t) => makeHeader(4, t));
+            html = html.replace(/^### (.+)$/gm, (_, t) => makeHeader(3, t));
+            html = html.replace(/^## (.+)$/gm, (_, t) => makeHeader(2, t));
+            html = html.replace(/^# (.+)$/gm, (_, t) => makeHeader(1, t));
+
+            html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+            html = html.replace(/^&gt; (.*)$/gm, '<blockquote><p>$1</p></blockquote>');
+            html = html.replace(/<\/blockquote>\n<blockquote>/g, '\n');
+
+            html = html.replace(/^\* \* \*$/gm, '<hr>');
+            html = html.replace(/^---$/gm, '<hr>');
+
+            html = html.replace(/^\d+[\.\)]\s+(.+)$/gm, '<li>$1</li>');
+            html = html.replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.+<\/li>\n?)+/g, m => '<ul>' + m + '</ul>');
+
+            const lines = html.split('\n');
+            const result = [];
+            let para = [];
+
+            for (const line of lines) {
+                const t = line.trim();
+                if (!t) {
+                    if (para.length) {
+                        result.push('<p>' + para.join(' ') + '</p>');
+                        para = [];
+                    }
+                    continue;
+                }
+                if (/^<(h[1-6]|blockquote|ul|ol|li|hr|div|p)/.test(t) || /<\/(h[1-6]|blockquote|ul|ol|div|p)>$/.test(t)) {
+                    if (para.length) {
+                        result.push('<p>' + para.join(' ') + '</p>');
+                        para = [];
+                    }
+                    result.push(t);
+                } else {
+                    para.push(t);
+                }
+            }
+            if (para.length) result.push('<p>' + para.join(' ') + '</p>');
+
+            // Wrap each section (header + content) in a container for proper sticky behavior
+            // IDs go on sections, not headers, so navigation scrolls to section start
+            let wrapped = result.join('\n');
+            // Extract ID from headers and move to section
+            wrapped = wrapped.replace(/<h([12])([^>]*)id="([^"]+)"([^>]*)>/g, '</section><section class="section" id="$3"><h$1$2$4>');
+            // Remove leading </section> and add trailing </section>
+            wrapped = wrapped.replace(/^<\/section>/, '');
+            wrapped += '</section>';
+            // Clean empty sections
+            wrapped = wrapped.replace(/<section class="section"[^>]*><\/section>/g, '');
+
+            return wrapped;
+        }
+
+        function makeHeader(level, text) {
+            const cleanText = text.replace(/\*\*/g, '').trim();
+            const id = slugify(cleanText);
+            return `<h${level} id="${id}"><a class="header-anchor" href="#${id}" onclick="copyLink(event, '${id}')">§</a>${text}</h${level}>`;
+        }
+
+        function copyLink(e, id) {
+            e.preventDefault();
+            const url = new URL(window.location);
+            url.hash = id;
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        }
+
+        function getParams() {
+            const params = new URLSearchParams(window.location.search);
+            return { lang: params.get('lang') || 'en' };
+        }
+
+        function setLang(lang) {
+            const url = new URL(window.location);
+            url.searchParams.set('lang', lang);
+            history.pushState(null, '', url.toString());
+        }
+
+        function setupHeaderObserver() {
+            if (headerObserver) headerObserver.disconnect();
+
+            const sections = document.querySelectorAll('#text .section[id]');
+            if (!sections.length) return;
+
+            headerObserver = new IntersectionObserver(entries => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting && entry.target.id) {
+                        const newHash = '#' + entry.target.id;
+                        if (window.location.hash !== newHash) {
+                            history.replaceState(null, '', newHash);
+                        }
+                        // Update active TOC subitem
+                        document.querySelectorAll('.toc-item.sub').forEach(item => {
+                            const href = item.getAttribute('href');
+                            item.classList.toggle('active', href === newHash);
+                        });
+                        break;
+                    }
+                }
+            }, { rootMargin: '-10% 0px -80% 0px' });
+
+            sections.forEach(s => headerObserver.observe(s));
+        }
+
+        async function init() {
+            const params = getParams();
+            currentLang = params.lang;
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === currentLang);
+            });
+
+            try {
+                const [enRes, ruRes] = await Promise.all([fetch('en.md'), fetch('ru.md')]);
+                bookData.en = parseBook(await enRes.text());
+                bookData.ru = parseBook(await ruRes.text());
+            } catch (e) {
+                document.getElementById('text').innerHTML = `<div class="error">Error loading book</div>`;
+                return;
+            }
+
+            renderBook();
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    const newLang = e.target.dataset.lang;
+                    if (newLang === currentLang) return;
+
+                    currentLang = newLang;
+                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    setLang(currentLang);
+                    renderBook(true);
+                });
+            });
+
+            // Navigation button handlers
+            document.querySelectorAll('.nav-link.prev').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (currentChapterIndex > 0) renderChapter(currentChapterIndex - 1);
+                });
+            });
+            document.querySelectorAll('.nav-link.next').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (currentChapterIndex < chapters.length - 1) renderChapter(currentChapterIndex + 1);
+                });
+            });
+
+            window.addEventListener('popstate', () => {
+                const p = getParams();
+                if (p.lang !== currentLang) {
+                    currentLang = p.lang;
+                    document.querySelectorAll('.lang-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.lang === currentLang);
+                    });
+                    renderBook(true);
+                }
+            });
+        }
+
+        function parseBook(text) {
+            const lines = text.split('\n');
+            const result = { title: '', author: '', chapters: [] };
+
+            let currentChapter = null;
+            let currentContent = [];
+            let foundFirstH1 = false;
+            let frontMatter = [];
+            let titleLine = '';
+            let authorLine = '';
+
+            for (const line of lines) {
+                if (line.match(/^# /) && !foundFirstH1) {
+                    result.title = line.replace(/^#\s*/, '').replace(/\*\*/g, '').trim();
+                    titleLine = line;
+                    foundFirstH1 = true;
+                    continue;
+                }
+
+                if (!result.author && foundFirstH1) {
+                    const m = line.match(/^\*\*(.+?)\*\*$/) || line.match(/^_(.+?)_$/);
+                    if (m) {
+                        result.author = m[1].replace(/^by\s+/i, '').trim();
+                        authorLine = line;
+                        continue;
+                    }
+                }
+
+                if (line.match(/^# /) && foundFirstH1) {
+                    if (!currentChapter && frontMatter.length) {
+                        // Include title and author in front matter content
+                        const frontContent = [titleLine, '', authorLine, '', ...frontMatter].join('\n').trim();
+                        result.chapters.push({
+                            title: result.title,
+                            content: frontContent
+                        });
+                    }
+                    if (currentChapter) {
+                        currentChapter.content = currentContent.join('\n').trim();
+                        result.chapters.push(currentChapter);
+                    }
+                    const headerText = line.replace(/^#\s*/, '').replace(/\*\*/g, '').trim();
+                    currentChapter = { title: headerText, content: '' };
+                    currentContent = [line];
+                    continue;
+                }
+
+                if (currentChapter) {
+                    currentContent.push(line);
+                } else if (foundFirstH1) {
+                    frontMatter.push(line);
+                }
+            }
+
+            if (currentChapter) {
+                currentChapter.content = currentContent.join('\n').trim();
+                result.chapters.push(currentChapter);
+            }
+
+            if (result.chapters.length === 0 && frontMatter.length) {
+                const frontContent = [titleLine, '', authorLine, '', ...frontMatter].join('\n').trim();
+                result.chapters.push({
+                    title: 'Content',
+                    content: frontContent
+                });
+            }
+
+            return result;
+        }
+
+        function renderBook(instant = false) {
+            const book = bookData[currentLang];
+            if (!book) return;
+
+            chapters = book.chapters;
+            document.getElementById('book-title-sidebar').textContent = book.title;
+            document.getElementById('author-name').textContent = book.author;
+            document.title = book.title;
+
+            const hash = window.location.hash.slice(1);
+            let chapterIdx = 0;
+
+            if (hash) {
+                for (let i = 0; i < chapters.length; i++) {
+                    const ids = extractHeaderIds(chapters[i].content);
+                    if (ids.includes(hash)) {
+                        chapterIdx = i;
+                        break;
+                    }
+                }
+            }
+
+            renderChapter(chapterIdx);
+
+            if (hash) {
+                requestAnimationFrame(() => {
+                    const el = document.getElementById(hash);
+                    if (el) el.scrollIntoView({ behavior: instant ? 'instant' : 'smooth' });
+                });
+            }
+        }
+
+        function extractHeaderIds(content) {
+            const regex = /^#+ (.+)$/gm;
+            const ids = [];
+            let match;
+            while ((match = regex.exec(content)) !== null) {
+                ids.push(slugify(match[1]));
+            }
+            return ids;
+        }
+
+        function renderChapter(index) {
+            if (index < 0 || index >= chapters.length) return;
+
+            currentChapterIndex = index;
+            const chapter = chapters[index];
+
+            document.getElementById('text').innerHTML = parseMarkdown(chapter.content);
+
+            // Update nav links (top & bottom)
+            const prevLinks = document.querySelectorAll('.nav-link.prev');
+            const nextLinks = document.querySelectorAll('.nav-link.next');
+
+            prevLinks.forEach(link => {
+                if (index > 0) {
+                    link.textContent = chapters[index - 1].title;
+                    link.classList.remove('hidden');
+                } else {
+                    link.textContent = '';
+                    link.classList.add('hidden');
+                }
+            });
+
+            nextLinks.forEach(link => {
+                if (index < chapters.length - 1) {
+                    link.textContent = chapters[index + 1].title;
+                    link.classList.remove('hidden');
+                } else {
+                    link.textContent = '';
+                    link.classList.add('hidden');
+                }
+            });
+
+            // Update TOC
+            renderTOC();
+
+            window.scrollTo(0, 0);
+            setupHeaderObserver();
+        }
+
+        function renderTOC() {
+            const toc = document.getElementById('toc');
+            let html = '';
+
+            chapters.forEach((ch, i) => {
+                const isActive = i === currentChapterIndex;
+                html += `<a class="toc-item${isActive ? ' active' : ''}" href="#" role="button" tabindex="0" data-index="${i}">${ch.title}</a>`;
+
+                // Show subheaders for active chapter
+                if (isActive) {
+                    const h2Matches = ch.content.match(/^##\s+.+$/gm) || [];
+                    h2Matches.forEach(h2 => {
+                        const text = h2.replace(/^##\s*/, '').replace(/\*\*/g, '').trim();
+                        const id = slugify(text);
+                        html += `<a class="toc-item sub" href="#${id}">${text}</a>`;
+                    });
+                }
+            });
+
+            toc.innerHTML = html;
+
+            toc.querySelectorAll('.toc-item:not(.sub)').forEach(item => {
+                const handleSelect = (e) => {
+                    e.preventDefault();
+                    renderChapter(parseInt(item.dataset.index));
+                    // Close sidebar on mobile after selection
+                    if (window.innerWidth <= 1000) {
+                        sidebar.classList.add('collapsed');
+                        document.body.classList.add('sidebar-collapsed');
+                        sidebarOverlay.classList.remove('visible');
+                    }
+                };
+                item.addEventListener('click', handleSelect);
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') handleSelect(e);
+                });
+            });
+
+            // Close sidebar on mobile when clicking subheader links
+            toc.querySelectorAll('.toc-item.sub').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth <= 1000) {
+                        sidebar.classList.add('collapsed');
+                        document.body.classList.add('sidebar-collapsed');
+                        sidebarOverlay.classList.remove('visible');
+                    }
+                });
+            });
+        }
+
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const savedSidebarState = localStorage.getItem('sidebarCollapsed');
+
+        // On mobile, start collapsed
+        const isMobile = window.innerWidth <= 1000;
+        if (isMobile || savedSidebarState === 'true') {
+            sidebar.classList.add('collapsed');
+            document.body.classList.add('sidebar-collapsed');
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('collapsed');
+            document.body.classList.toggle('sidebar-collapsed');
+            const isCollapsed = sidebar.classList.contains('collapsed');
+            // Update overlay visibility
+            sidebarOverlay.classList.toggle('visible', !isCollapsed);
+            // Only save state on desktop
+            if (window.innerWidth > 1000) {
+                localStorage.setItem('sidebarCollapsed', isCollapsed);
+            }
+        }
+
+        sidebarToggle.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Mobile swipe to open sidebar
+        let touchStartX = 0, touchStartY = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+        document.addEventListener('touchend', e => {
+            if (window.innerWidth > 1000) return;
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            // Swipe left from right edge to open
+            if (touchStartX > window.innerWidth - 50 && dx < -50 && Math.abs(dy) < 100) {
+                if (sidebar.classList.contains('collapsed')) toggleSidebar();
+            }
+            // Swipe right to close
+            if (dx > 80 && Math.abs(dy) < 100 && !sidebar.classList.contains('collapsed')) {
+                toggleSidebar();
+            }
+        }, { passive: true });
+
+        init();
+    </script>
+
+    <div id="elevenlabs-audionative-widget" data-height="90" data-width="100%" data-frameborder="no" data-scrolling="no" data-publicuserid="db526374e402e8787d540e368c4a5775842363d71157d5fa87d83ff282b9f7ff" data-playerurl="https://elevenlabs.io/player/index.html" >Loading the <a href="https://elevenlabs.io/text-to-speech" target="_blank" rel="noopener">Elevenlabs Text to Speech</a> AudioNative Player...</div><script src="https://elevenlabs.io/player/audioNativeHelper.js" type="text/javascript"></script>
+</body>
+</html>
