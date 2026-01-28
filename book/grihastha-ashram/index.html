@@ -11,7 +11,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html {
             scroll-behavior: smooth;
-            overflow-x: hidden;
             overscroll-behavior-x: none;
         }
 
@@ -21,7 +20,8 @@
             line-height: 1.8;
             color: #1a1a1a;
             background: #fff;
-            overflow-x: hidden;
+            /* Use clip instead of hidden to not break sticky */
+            overflow-x: clip;
         }
 
         .page {
@@ -32,7 +32,7 @@
         }
 
         body.sidebar-collapsed .page {
-            grid-template-columns: 1fr 60px;
+            grid-template-columns: 1fr 0px;
         }
 
         .sidebar {
@@ -163,9 +163,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            max-width: 72rem;
+            margin: 0 auto 40px;
             padding: 20px 0;
             border-bottom: 1px solid #eee;
-            margin-bottom: 40px;
         }
         .content-nav.bottom {
             border-bottom: none;
@@ -223,7 +224,7 @@
 
         .toc-item {
             display: block;
-            padding: 8px 15px;
+            padding: 8px 20px;
             font-size: 0.75em;
             color: #666;
             text-decoration: none;
@@ -234,7 +235,7 @@
             text-overflow: ellipsis;
         }
         .toc-item.sub {
-            padding-left: 25px;
+            padding-left: 30px;
             font-size: 0.7em;
             color: #767676;
         }
@@ -257,37 +258,45 @@
         .home-link svg { width: 20px; height: 20px; }
 
         .content {
-            padding: 60px 100px 120px 80px;
-            max-width: 42em;
-            margin: 0 auto;
+            position: relative;
+            padding: 60px 0 100px;
+        }
+
+        #text {
+            /* Full width for sticky headers, content constrains itself */
         }
 
         #text h1, #text h2, #text h3, #text h4, #text h5, #text h6 {
             scroll-margin-top: 20px;
             position: sticky;
             top: 0;
-            padding-top: 0.3em;
-            padding-bottom: 0;
-            margin-bottom: 0.8em;
             z-index: 10;
-            /* Scroll-driven shrink animation - shrinks as header approaches sticky position */
-            animation: shrink-header linear both;
-            animation-timeline: view(block 160px 100%);
-            animation-range: entry 0% entry 100%;
-            transform-origin: center top;
             text-align: center;
             line-height: 1.2;
         }
 
+        /* Inner text wrapper for centered content with animation */
+        #text h1 .header-text, #text h2 .header-text, #text h3 .header-text, #text h4 .header-text {
+            display: block;
+            max-width: 72rem;
+            margin: 0 auto;
+            padding-bottom: 0;
+            /* Scroll-driven shrink animation */
+            animation: shrink-header linear both;
+            animation-timeline: view(block 160px 100%);
+            animation-range: entry 0% entry 100%;
+            transform-origin: center top;
+        }
+
         /* Blur background as pseudo-element - independent of text */
-        #text h1::before, #text h2::before, #text h3::before, #text h4::before {
+        #text h1 .header-text::before, #text h2 .header-text::before, #text h3 .header-text::before, #text h4 .header-text::before {
             content: '';
             position: absolute;
             top: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 120%;
-            height: 150%;
+            height: 240%;
             background: radial-gradient(ellipse 120% 140% at 50% 0%,
                 rgba(255,255,255,0.95) 0%,
                 rgba(255,255,255,0.7) 40%,
@@ -298,6 +307,10 @@
             -webkit-mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 0%, black 30%, transparent 70%);
             z-index: -1;
             pointer-events: none;
+        }
+
+        #text h1 .header-text, #text h2 .header-text, #text h3 .header-text, #text h4 .header-text {
+            position: relative;
         }
 
         /* Custom property for section exit progress - enables inheriting animated value */
@@ -321,6 +334,9 @@
             /* Each section is a containing block for its sticky header */
             /* display: flow-root creates new BFC, preventing margin collapse */
             display: flow-root;
+            position: relative;
+            padding: 60px 4rem 0;
+
             /* Animate exit progress when section leaves viewport from top */
             /* exit 80% = only last 20% of section visible, exit 100% = section fully gone */
             animation: section-exit linear both;
@@ -328,9 +344,14 @@
             animation-range: exit 80% exit 100%;
         }
 
+        #text .section:first-child {
+            padding-top: 12rem;
+        }
+
         /* Sticky headers slide up as their section exits */
-        #text .section > h1:first-child,
-        #text .section > h2:first-child {
+        /* Anchor is now first-child, header is second */
+        #text .section > h1,
+        #text .section > h2 {
             transform: translateY(calc(var(--section-exit) * -10rem));
         }
         /*
@@ -347,67 +368,87 @@
         */
 
         .header-anchor {
+            position: absolute;
+            left: 1.5rem;
             opacity: 0.3;
             color: #999;
             text-decoration: none;
             font-weight: normal;
             transition: opacity 0.2s;
             cursor: pointer;
-            margin-right: 0.4em;
-            font-size: 0.75em;
-            vertical-align: middle;
-            position: relative;
-            top: -0.1em;
+            font-size: 1em;
+            z-index: 11;
         }
 
         .header-anchor:hover { opacity: 1; color: #666; }
 
-        #text h1 {
-            font-size: clamp(32px, 4vw, 64px);
-            font-weight: 500;
-            margin: 60px 0 0; padding-bottom:  60px;
+        .para-anchor {
+            position: absolute;
+            left: 1.5rem;
+            opacity: 0.25;
+            color: #bbb;
+            text-decoration: none;
+            font-weight: normal;
+            transition: opacity 0.2s;
+            cursor: pointer;
+            font-size: 0.55em;
+            margin-top: 0.45em;
+            font-style: normal;
         }
+        #text p .para-anchor:hover { opacity: 1; color: #666; }
 
-        #text h1:first-child { margin-top: 0; }
+        #text h1 {
+            font-size: clamp(32px, 4vw, 54px);
+            font-weight: 500;
+            margin: 0;
+            padding-bottom: 60px;
+        }
 
         #text h2 {
             font-size: clamp(26px, 3vw, 48px);
             font-weight: 400;
             font-style: italic;
             color: #333;
-            margin: 50px 0 0; padding-bottom:  25px;
+            margin: 0;
+            padding-bottom: 25px;
         }
 
         #text h3 {
             font-size: clamp(22px, 2.5vw, 30px);
             font-weight: 500;
-            margin: 40px 0 0; padding-bottom:  20px;
+            margin: 0;
+            padding-bottom: 20px;
             color: #333;
         }
 
         #text h4 {
             font-size: clamp(18px, 2vw, 24px);
             font-weight: 500;
-            margin: 30px 0 0; padding-bottom:  15px;
+            margin: 0;
+            padding-bottom: 15px;
             color: #444;
         }
 
         #text p {
-            margin-bottom: 1.5em;
+            max-width: 72rem;
+            margin: 0 auto;
+            padding-bottom: 1.5em;
+            scroll-margin-top: 4em;
             text-align: justify;
             hyphens: auto;
         }
 
-        /* Author attribution line (paragraph with only italic text) */
-        #text p:has(> em:only-child) {
+        /* Author attribution line (paragraph with only italic text after anchor) */
+        #text p:has(> .para-anchor + em:last-child) {
             text-align: center;
             font-size: 0.9em;
             color: #666;
         }
 
         #text blockquote {
+            max-width: 72rem;
+            margin: 2em auto;
             font-style: italic;
-            margin: 2em 0;
             padding-left: 1.5em;
             border-left: 2px solid #ccc;
             color: #444;
@@ -415,11 +456,12 @@
             word-wrap: break-word;
         }
 
-        #text blockquote p { margin-bottom: 0.8em; }
+        #text blockquote p {  max-width: none; padding-bottom: 0.4em; }
         #text blockquote p:last-child { margin-bottom: 0; }
 
         #text ul, #text ol {
-            margin: 1.5em 0;
+            max-width: 72rem;
+            margin: 1.5em auto;
             padding-left: 1.5em;
         }
 
@@ -430,7 +472,8 @@
         #text hr {
             border: none;
             text-align: center;
-            margin: 3em 0;
+            max-width: 72rem;
+            margin: 3em auto;
             color: #999;
         }
 
@@ -478,8 +521,11 @@
         @media (max-width: 1000px) {
             .page { grid-template-columns: 1fr; }
             body.sidebar-collapsed .page { grid-template-columns: 1fr; }
-            .content { padding: 30px 25px 80px; }
+            .content { padding: 30px 0 80px; }
             .header-anchor { display: none; }
+            #text .section {
+                padding: 4rem 2rem;
+            }
 
             /* Mobile sidebar as popup overlay */
             .sidebar {
@@ -552,6 +598,8 @@
 
         // Header ID map: Russian -> English (for consistent anchors across languages)
         const headerMap = {
+            // Book title
+            'грихастха ашрам. семейная духовная жизнь': 'grihastha-ashram',
             // H1 chapters
             'часть 1': 'part-one',
             'часть 2': 'part-two',
@@ -657,13 +705,42 @@
             // Wrap each section (header + content) in a container for proper sticky behavior
             // IDs go on sections, not headers, so navigation scrolls to section start
             let wrapped = result.join('\n');
-            // Extract ID from headers and move to section
-            wrapped = wrapped.replace(/<h([12])([^>]*)id="([^"]+)"([^>]*)>/g, '</section><section class="section" id="$3"><h$1$2$4>');
+            // Extract ID from headers and move to section (anchor is sibling before header)
+            wrapped = wrapped.replace(/<a class="header-anchor"([^>]*)data-for="([^"]+)"([^>]*)>([^<]*)<\/a><h([12]) id="[^"]+">/g,
+                '</section><section class="section" id="$2"><a class="header-anchor"$1data-for="$2"$3>$4</a><h$5>');
             // Remove leading </section> and add trailing </section>
             wrapped = wrapped.replace(/^<\/section>/, '');
             wrapped += '</section>';
             // Clean empty sections
             wrapped = wrapped.replace(/<section class="section"[^>]*><\/section>/g, '');
+
+            // Add paragraph IDs within each section
+            wrapped = wrapped.replace(/<section class="section" id="([^"]+)">/g, (match, sectionId) => {
+                return `<section class="section" id="${sectionId}" data-section="${sectionId}">`;
+            });
+
+            // Add paragraph IDs scoped to each section for cross-language consistency
+            // Process each section separately
+            wrapped = wrapped.replace(/<section class="section" id="([^"]+)"([^>]*)>([\s\S]*?)(?=<\/section>)/g, (match, sectionId, attrs, content) => {
+                let paraCount = 0;
+                const processedContent = content.replace(/<p>(?!<a class="para-anchor)/g, (pMatch, offset) => {
+                    // Check if we're inside a blockquote
+                    const before = content.substring(0, offset);
+                    const lastBlockquoteOpen = before.lastIndexOf('<blockquote>');
+                    const lastBlockquoteClose = before.lastIndexOf('</blockquote>');
+                    if (lastBlockquoteOpen > lastBlockquoteClose) {
+                        return '<p>';
+                    }
+                    paraCount++;
+                    const id = `${sectionId}-p${paraCount}`;
+                    return `<p id="${id}"><a class="para-anchor" href="#${id}" onclick="copyLink(event, '${id}')">¶</a>`;
+                }).replace(/<blockquote>/g, () => {
+                    paraCount++;
+                    const id = `${sectionId}-p${paraCount}`;
+                    return `<blockquote id="${id}"><a class="para-anchor" href="#${id}" onclick="copyLink(event, '${id}')">¶</a>`;
+                });
+                return `<section class="section" id="${sectionId}"${attrs}>${processedContent}`;
+            });
 
             return wrapped;
         }
@@ -671,18 +748,12 @@
         function makeHeader(level, text) {
             const cleanText = text.replace(/\*\*/g, '').trim();
             const id = slugify(cleanText);
-            return `<h${level} id="${id}"><a class="header-anchor" href="#${id}" onclick="copyLink(event, '${id}')">§</a>${text}</h${level}>`;
+            return `<a class="header-anchor" href="#${id}" data-for="${id}" onclick="copyLink(event, '${id}')">§</a><h${level} id="${id}"><span class="header-text">${text}</span></h${level}>`;
         }
 
         function copyLink(e, id) {
             e.preventDefault();
-            const url = new URL(window.location);
-            url.hash = id;
-            navigator.clipboard.writeText(url.toString()).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            });
+            history.pushState(null, '', '#' + id);
         }
 
         function getParams() {
@@ -999,10 +1070,7 @@
             const isCollapsed = sidebar.classList.contains('collapsed');
             // Update overlay visibility
             sidebarOverlay.classList.toggle('visible', !isCollapsed);
-            // Only save state on desktop
-            if (window.innerWidth > 1000) {
-                localStorage.setItem('sidebarCollapsed', isCollapsed);
-            }
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
         }
 
         sidebarToggle.addEventListener('click', toggleSidebar);

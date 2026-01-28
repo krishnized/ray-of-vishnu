@@ -1298,10 +1298,11 @@ As soon as a devotee falls into isolation, he **quickly weakens**, and his spiri
 
 ## Unhappiness
 
-> **na lolupāyāpi deśe
+> na lolupāyāpi deśe
 > na gṛhārūḍha-cetase
 > nābhaktāya ca me jñātu
-> na mad-bhakta-dviṣām api**
+> na mad-bhakta-dviṣām api
+
 > “This should not be explained to those who are greedy, or too attached to household life, nor to one who is not devoted to Me, nor to one who is envious of My devotees or of the Supreme Personality of Godhead.”
 
 **Commentary.** Those who strive to cause harm to other living beings are **not capable of understanding** the science of Kṛṣṇa consciousness. For such people the entrance to the kingdom of loving, transcendental service to the Lord is closed.
