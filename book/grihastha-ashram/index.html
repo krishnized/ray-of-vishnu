@@ -399,14 +399,12 @@
 
         #text h1 {
             font-size: clamp(32px, 4vw, 54px);
-            font-weight: 500;
             margin: 0;
             padding-bottom: 60px;
         }
 
         #text h2 {
             font-size: clamp(26px, 3vw, 48px);
-            font-weight: 400;
             font-style: italic;
             color: #333;
             margin: 0;
@@ -415,7 +413,6 @@
 
         #text h3 {
             font-size: clamp(22px, 2.5vw, 30px);
-            font-weight: 500;
             margin: 0;
             padding-bottom: 20px;
             color: #333;
@@ -423,7 +420,6 @@
 
         #text h4 {
             font-size: clamp(18px, 2vw, 24px);
-            font-weight: 500;
             margin: 0;
             padding-bottom: 15px;
             color: #444;
@@ -525,6 +521,11 @@
             .header-anchor { display: none; }
             #text .section {
                 padding: 4rem 2rem;
+            }
+            #text .section:first-child { padding: 6rem 0 0rem;}
+            .content-nav {
+                padding-left: 2rem;
+                padding-right: 2rem;
             }
 
             /* Mobile sidebar as popup overlay */
