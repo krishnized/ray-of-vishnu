@@ -286,6 +286,7 @@
             animation-timeline: view(block 160px 100%);
             animation-range: entry 0% entry 100%;
             transform-origin: center top;
+            position: relative;
         }
 
         /* Blur background as pseudo-element - independent of text */
@@ -310,9 +311,6 @@
             pointer-events: none;
         }
 
-        #text h1 .header-text, #text h2 .header-text, #text h3 .header-text, #text h4 .header-text {
-            position: relative;
-        }
 
         /* Custom property for section exit progress - enables inheriting animated value */
         @property --section-exit {
@@ -436,11 +434,13 @@
             hyphens: auto;
         }
 
-        /* Author attribution line (paragraph with only italic text after anchor) */
-        #text p:has(> .para-anchor + em:last-child) {
+        /* Author attribution line (paragraph with ONLY italic text) */
+        #text p.attribution {
             text-align: center;
             font-size: 0.9em;
             color: #666;
+            margin-top: -3rem;
+            margin-bottom: 2rem;
         }
 
         #text blockquote {
@@ -696,14 +696,19 @@
                 const t = line.trim();
                 if (!t) {
                     if (para.length) {
-                        result.push('<p>' + para.join(' ') + '</p>');
+                        const content = para.join(' ');
+                        // Check if paragraph is ONLY italic (author attribution)
+                        const isAttribution = /^<em>.+<\/em>$/.test(content);
+                        result.push(isAttribution ? '<p class="attribution">' + content + '</p>' : '<p>' + content + '</p>');
                         para = [];
                     }
                     continue;
                 }
                 if (/^<(h[1-6]|blockquote|ul|ol|li|hr|div|p)/.test(t) || /<\/(h[1-6]|blockquote|ul|ol|div|p)>$/.test(t)) {
                     if (para.length) {
-                        result.push('<p>' + para.join(' ') + '</p>');
+                        const content = para.join(' ');
+                        const isAttribution = /^<em>.+<\/em>$/.test(content);
+                        result.push(isAttribution ? '<p class="attribution">' + content + '</p>' : '<p>' + content + '</p>');
                         para = [];
                     }
                     result.push(t);
@@ -711,7 +716,11 @@
                     para.push(t);
                 }
             }
-            if (para.length) result.push('<p>' + para.join(' ') + '</p>');
+            if (para.length) {
+                const content = para.join(' ');
+                const isAttribution = /^<em>.+<\/em>$/.test(content);
+                result.push(isAttribution ? '<p class="attribution">' + content + '</p>' : '<p>' + content + '</p>');
+            }
 
             // Wrap each section (header + content) in a container for proper sticky behavior
             // IDs go on sections, not headers, so navigation scrolls to section start

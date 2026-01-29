@@ -68,7 +68,7 @@ Sacrifice, charity, and tapasya are different forms of renunciation, although th
 > yajña-dāna-tapaḥ-karma
 > na tyājyaṁ kāryam eva tat
 > yajño dānaṁ tapaś caiva
-> pāvanāni manīṣiṇām*
+> pāvanāni manīṣiṇām
 > “Acts of sacrifice, charity, and penance should not be given up but should be performed. Indeed, sacrifice, charity, and penance purify even the great souls.”
 > — *Bhagavad-gītā 18.5*
 
