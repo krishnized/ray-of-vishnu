@@ -56,16 +56,16 @@ For many neophytes who reflect on renunciation, this situation seems hopeless. T
 
 In such a state of consciousness it is very difficult to remain a yogī. Therefore guru, sādhu, and śāstra must resolve the contradictions created by doubt. In the *Bhagavad-gītā* this question is discussed as one of the most difficult, where Lord Kṛṣṇa says to Arjuna:
 
-> *tyājyaṁ doṣa-vad ity eke
+> tyājyaṁ doṣa-vad ity eke
 > karma prāhur manīṣiṇaḥ
 > yajña-dāna-tapaḥ-karma
-> na tyājyaṁ iti cāpare*
+> na tyājyaṁ iti cāpare
 > “Some learned men declare that all kinds of fruitive activities should be given up as evil, yet other sages maintain that acts of sacrifice, charity, and penance should never be abandoned.”
 > — *Bhagavad-gītā 18.3*
 
 Sacrifice, charity, and tapasya are different forms of renunciation, although they are active material activities. A man and a woman who are not bound by responsibility and duty toward God will not be able to understand this statement. As long as they are blinded by the desire for sense enjoyment, they do not think about renunciation and do not even suspect that such a path exists. But for those who have dedicated their lives to God, these words are saving: a man and a woman can walk the path of renunciation together, without giving up the activities connected with family life. Any activity performed as a sacrifice to the Lord is flawless. Even great souls who have reached the highest stages of self-realization do not neglect such activity.
 
-> *yajña-dāna-tapaḥ-karma
+> yajña-dāna-tapaḥ-karma
 > na tyājyaṁ kāryam eva tat
 > yajño dānaṁ tapaś caiva
 > pāvanāni manīṣiṇām*
@@ -80,10 +80,10 @@ In other words, family life and material activity are presented here as yajña �
 
 In conclusion to this subject, Lord Kṛṣṇa explains in what consciousness such yajña should be performed:
 
-> *etāny api tu karmāṇi
+> etāny api tu karmāṇi
 > saṅgaṁ tyaktvā phalāni ca
 > kartavyānīti me pārtha
-> niścitaṁ matam uttamam*
+> niścitaṁ matam uttamam
 > “All these activities should be performed without attachment or any expectation of result. They should be done as a matter of duty, O son of Pṛthā. That is My final judgment.”
 > — *Bhagavad-gītā 18.6*
 
@@ -499,19 +499,19 @@ The platform of happiness in family life is loving service according to the will
 
 A beginning devotee may think that as soon as he attains love for God, he will no longer need to work or perform any duties. It seems that this is stated in the *Bhagavad-gītā* (3.17):
 
-> *yas tv ātma-ratir eva syād
+> yas tv ātma-ratir eva syād
 > ātma-tṛptaś ca mānavaḥ
 > ātmany eva ca santuṣṭas
-> tasya kāryaṁ na vidyate*
+> tasya kāryaṁ na vidyate
 
 > “But for one who takes pleasure in the self, whose human life is devoted to self-realization, and who is satisfied in the self alone — for him there are no duties.”
 
 But in the next verse (3.18) Kṛṣṇa says that such a person has no reason to abandon his duties:
 
-> *naiva tasya kṛtenārtho
+> naiva tasya kṛtenārtho
 > nākṛteneha kaścana
 > na cāsya sarva-bhūteṣu
-> kaścid artha-vyapāśrayaḥ*
+> kaścid artha-vyapāśrayaḥ
 
 > “A self-realized person has no purpose to serve by performing prescribed duties, nor any reason not to perform them. He is not dependent on any other living being.”
 
@@ -562,7 +562,7 @@ A chaste wife can easily and accurately sense with her heart the hidden attitude
 
 *(Long Sītā–Rāma passage from the Rāmāyaṇa)*
 
-> *(This passage is rendered in summary rather than poetic line-by-line translation in English editions; it shows Sītā warning Rāma about the subtle danger of unnecessary violence, the influence of weapons on the mind, and the fall of an ascetic who became corrupted by carrying arms. Out of love and concern, she speaks not as a commander but as a devoted wife, asking him to consider his duty, to avoid needless harm, and to remain fixed in righteousness.)*
+(This passage is rendered in summary rather than poetic line-by-line translation in English editions; it shows Sītā warning Rāma about the subtle danger of unnecessary violence, the influence of weapons on the mind, and the fall of an ascetic who became corrupted by carrying arms. Out of love and concern, she speaks not as a commander but as a devoted wife, asking him to consider his duty, to avoid needless harm, and to remain fixed in righteousness.)*
 
 **(If you want, I can produce a full literary English rendering of this Ramayana passage separately — it is long and deserves its own careful treatment.)**
 
@@ -649,10 +649,10 @@ Thus, one fault of householders is that they may forget service to God and begin
 
 And yet, if in one way or another they do not abandon devotional service, all their sins are eventually forgiven:
 
-> *api cet su-durācāro
+> api cet su-durācāro
 > bhajate mām ananya-bhāk
 > sādhur eva sa mantavyaḥ
-> samyag vyavasito hi saḥ*
+> samyag vyavasito hi saḥ
 
 > “Even if one commits the most abominable actions, if he is engaged in devotional service he is to be considered saintly, because he is rightly situated.”
 > — *Bhagavad-gītā* 9.30
@@ -1231,10 +1231,10 @@ To finally overcome karma accumulated over many lives, one must learn to **endur
 
 Therefore even devotees under Kṛṣṇa’s protection are sometimes presented with surprises by life. Someone becomes our follower, someone criticizes us; someone interferes in our personal life, someone remains indifferent; someone wants to cooperate with us, someone refuses. In the family, someone may suddenly fall ill; children may be born disobedient; there may be catastrophically not enough money to live, or for someone more than enough; in some things husband and wife understand each other, in others they do not.
 
-> **mātrā-sparśās tu kaunteya
+> mātrā-sparśās tu kaunteya
 > śītoṣṇa-sukha-duḥkha-dāḥ
 > āgamāpāyino ’nityās
-> tāṁs titikṣasva bhārata**
+> tāṁs titikṣasva bhārata
 > “O son of Kuntī, the nonpermanent appearance of happiness and distress and their disappearance in due course are like the appearance and disappearance of winter and summer seasons. They arise from sense perception, O scion of Bharata, and one must learn to tolerate them without being disturbed.”
 > — *Bhagavad-gītā 2.14*
 
@@ -1261,10 +1261,10 @@ What is untimely infatuation? It is **illusory external energy testing our spiri
 
 Devotees of Kṛṣṇa may also pass through this test. But if their intelligence has truly taken shelter in Kṛṣṇa, they will remain pure. Without breaking the fourth regulative principle (no illicit sex), they pass this test easily, because Kṛṣṇa gives the necessary intelligence:
 
-> **teṣāṁ satata-yuktānāṁ
+> teṣāṁ satata-yuktānāṁ
 > bhajatāṁ prīti-pūrvakam
 > dadāmi buddhi-yogaṁ taṁ
-> yena mām upayānti te**
+> yena mām upayānti te
 
 
 > “To those who constantly serve Me with love, I give the understanding by which they can come to Me.”
@@ -1338,10 +1338,10 @@ Other people are **true devotees of Kṛṣṇa**, who sincerely wish to dedicat
 
 Such devotees fall **only externally**, but their **heart remains with Kṛṣṇa**. Kṛṣṇa speaks about this in the Bhagavad-gītā:
 
-> **api cet su-durācāro
+> api cet su-durācāro
 > bhajate mām ananya-bhāk
 > sādhur eva sa mantavyaḥ
-> samyag vyavasito hi saḥ**
+> samyag vyavasito hi saḥ
 > “Even if a person commits the most abominable actions, if he is engaged in exclusive devotional service to Me, he should be considered saintly, for he is properly situated.”
 > — *Bhagavad-gītā 9.30*
 
@@ -1363,10 +1363,10 @@ Devotee relatives should **continue their service and their practice** even in s
 
 ## Death and Divorce
 
-> **na jāyate mriyate vā kadācin
+> na jāyate mriyate vā kadācin
 > nāyaṁ bhūtvā bhavitā vā na bhūyaḥ
 > ajo nityaḥ śāśvato ’yaṁ purāṇo
-> na hanyate hanyamāne śarīre**
+> na hanyate hanyamāne śarīre
 > “For the soul there is neither birth nor death at any time. He has not come into being, does not come into being, and will not come into being. He is unborn, eternal, ever-existing, primeval. He is not slain when the body is slain.”
 > — *Bhagavad-gītā 2.20*
 
@@ -1522,8 +1522,8 @@ At high levels, kāma manifests in a **refined, subtle way** — as high culture
 
 For those who have reached great heights in spiritual life, the *Bhagavad-gītā* gives the appropriate instruction:
 
-> *brahma-bhuvanāl lokāḥ punar āvartino ’rjuna
-> mām upetya tu kaunteya punar janma na vidyate*
+> brahma-bhuvanāl lokāḥ punar āvartino ’rjuna
+> mām upetya tu kaunteya punar janma na vidyate
 > “From the highest planet in the material world down to the lowest, all are places of misery wherein repeated birth and death take place. But one who attains My abode, O son of Kuntī, never takes birth again.”
 > — *Bhagavad-gītā 8.16*
 
@@ -1800,8 +1800,8 @@ And only **one Name** can be considered genuine, capable of exposing all the dec
 > — Bhaktivinoda Ṭhākura
 
 > **kali-kukkura:**
-> *harer nāma harer nāma harer nāmaiva kevalam
-> kalau nāsty eva nāsty eva nāsty eva gatir anyathā*
+> harer nāma harer nāma harer nāmaiva kevalam
+> kalau nāsty eva nāsty eva nāsty eva gatir anyathā
 > “In the age of Kali there is no other way, no other way, no other way for self-realization than chanting, chanting, chanting the holy names of the Lord.”
 
 God is great and powerful, and His Name is just as great and powerful. The name “Kṛṣṇa” cannot be something that excludes or deprives something of the right to exist. On the contrary, it is **all-inclusive**. Everything is in Kṛṣṇa, because He is the source of everything.
