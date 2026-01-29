@@ -235,7 +235,7 @@
             text-overflow: ellipsis;
         }
         .toc-item.sub {
-            padding-left: 30px;
+            padding-left: 40px;
             font-size: 0.7em;
             color: #767676;
         }
@@ -1052,7 +1052,7 @@
                     e.preventDefault();
                     const targetChapter = parseInt(item.dataset.chapter);
                     const targetSection = item.dataset.section;
-                    
+
                     // If we're not on the target chapter, navigate to it first
                     if (targetChapter !== currentChapterIndex) {
                         renderChapter(targetChapter);
@@ -1066,7 +1066,7 @@
                         const sectionEl = document.getElementById(targetSection);
                         if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
-                    
+
                     // Close sidebar on mobile after selection
                     if (window.innerWidth <= 1000) {
                         sidebar.classList.add('collapsed');
