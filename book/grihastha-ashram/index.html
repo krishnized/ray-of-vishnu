@@ -1018,15 +1018,13 @@
                 const isActive = i === currentChapterIndex;
                 html += `<a class="toc-item${isActive ? ' active' : ''}" href="#" role="button" tabindex="0" data-index="${i}">${ch.title}</a>`;
 
-                // Show subheaders for active chapter
-                if (isActive) {
-                    const h2Matches = ch.content.match(/^##\s+.+$/gm) || [];
-                    h2Matches.forEach(h2 => {
-                        const text = h2.replace(/^##\s*/, '').replace(/\*\*/g, '').trim();
-                        const id = slugify(text);
-                        html += `<a class="toc-item sub" href="#${id}">${text}</a>`;
-                    });
-                }
+                // Show all subheaders for all chapters
+                const h2Matches = ch.content.match(/^##\s+.+$/gm) || [];
+                h2Matches.forEach(h2 => {
+                    const text = h2.replace(/^##\s*/, '').replace(/\*\*/g, '').trim();
+                    const id = slugify(text);
+                    html += `<a class="toc-item sub" href="#${id}" data-chapter="${i}" data-section="${id}">${text}</a>`;
+                });
             });
 
             toc.innerHTML = html;
@@ -1048,9 +1046,28 @@
                 });
             });
 
-            // Close sidebar on mobile when clicking subheader links
+            // Handle subheader clicks - navigate to chapter first if needed, then scroll to section
             toc.querySelectorAll('.toc-item.sub').forEach(item => {
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetChapter = parseInt(item.dataset.chapter);
+                    const targetSection = item.dataset.section;
+                    
+                    // If we're not on the target chapter, navigate to it first
+                    if (targetChapter !== currentChapterIndex) {
+                        renderChapter(targetChapter);
+                        // Wait for chapter to render, then scroll to section
+                        setTimeout(() => {
+                            const sectionEl = document.getElementById(targetSection);
+                            if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 100);
+                    } else {
+                        // Already on the target chapter, just scroll to section
+                        const sectionEl = document.getElementById(targetSection);
+                        if (sectionEl) sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    
+                    // Close sidebar on mobile after selection
                     if (window.innerWidth <= 1000) {
                         sidebar.classList.add('collapsed');
                         document.body.classList.add('sidebar-collapsed');
